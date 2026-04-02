@@ -5,7 +5,7 @@ import { TextArea } from '@radix-ui/themes'
 import { Button } from '@radix-ui/themes'
 const NewIssuePage = () => {
   return (
-    <div className='max-w-xl space-y-5'>
+    <div className='max-w-xl space-y-9'>
        <TextField.Root placeholder="Title" />
        <TextArea placeholder ="Description" />
        <Button>Submit New Issues</Button>
