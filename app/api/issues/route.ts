@@ -2,11 +2,17 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { prisma } from "@/prisma/client";
 
-
 const createIssueSchema = z.object({
   title: z.string().min(1).max(255),
-  description: z.string().min(1).max(255),
+  description: z.string().min(1).max(16_000),
 });
+
+export async function GET() {
+  const issues = await prisma.issue.findMany({
+    orderBy: { createdAt: "desc" },
+  });
+  return NextResponse.json(issues);
+}
 
 export async function POST(request: NextRequest) {
   const body = await request.json();
@@ -14,7 +20,10 @@ export async function POST(request: NextRequest) {
 
   if (!validation.success) {
     return NextResponse.json(
-      { errors: validation.error },
+      {
+        message: "Validation failed",
+        errors: validation.error.flatten(),
+      },
       { status: 400 }
     );
   }
