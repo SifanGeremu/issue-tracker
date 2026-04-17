@@ -1,23 +1,18 @@
-import React from 'react'
+import { NextResponse } from "next/server";
+import { prisma } from "@/prisma/client";
 
+export async function GET() {
+  const [open, inProgress, closed, total] = await Promise.all([
+    prisma.issue.count({ where: { status: "OPEN" } }),
+    prisma.issue.count({ where: { status: "IN_PROGRESS" } }),
+    prisma.issue.count({ where: { status: "CLOSED" } }),
+    prisma.issue.count(),
+  ]);
 
-const reportPage = () => {
-  return (
-  
-  <div className='max-w-xl space-y-9'>
-       <TextField.Root placeholder="Title" />
-       <TextArea placeholder ="Description" />
-       <Button>Submit New Issues</Button>
-       <Button>Delete issue</Button>
-        <TextField.Root placeholder="Title" />
-       <TextArea placeholder ="Description" />
-       <Button>Submit New Issues</Button>
-       <Button>Delete issue</Button>
-    </div>
-  
-  
-
-  )
+  return NextResponse.json({
+    open,
+    inProgress,
+    closed,
+    total,
+  });
 }
-
-export default reportPage
