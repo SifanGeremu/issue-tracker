@@ -58,7 +58,9 @@ export default async function IssuesPage() {
             {issues.map((issue) => (
               <Table.Row key={issue.id}>
                 <Table.Cell>
-                  <Text weight="medium">{issue.title}</Text>
+                  <Link href={`/issues/${issue.id}`} className="hover:underline">
+                    <Text weight="medium">{issue.title}</Text>
+                  </Link>
                   <Text as="p" size="2" color="gray" className="line-clamp-2 mt-1">
                     {issue.description}
                   </Text>
