@@ -11,6 +11,10 @@ export default async function HomePage() {
     prisma.issue.count({ where: { status: "CLOSED" } }),
     prisma.issue.count(),
   ]);
+  const recentIssues = await prisma.issue.findMany({
+    orderBy: { createdAt: "desc" },
+    take: 5,
+  });
 
   const stats = [
     { label: "Open", value: open },
@@ -59,6 +63,29 @@ export default async function HomePage() {
           New issue
         </Link>
       </Flex>
+
+      <Card size="2">
+        <Text size="3" weight="medium">
+          Recent issues
+        </Text>
+        <div className="mt-3 space-y-2">
+          {recentIssues.length === 0 ? (
+            <Text size="2" color="gray">
+              No recent issues yet.
+            </Text>
+          ) : (
+            recentIssues.map((issue) => (
+              <Link
+                key={issue.id}
+                href={`/issues/${issue.id}`}
+                className="block rounded-md px-2 py-1 text-sm hover:bg-muted"
+              >
+                {issue.title}
+              </Link>
+            ))
+          )}
+        </div>
+      </Card>
     </div>
   );
 }
